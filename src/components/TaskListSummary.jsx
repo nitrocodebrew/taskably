@@ -1,9 +1,9 @@
-function TaskListSummary(totalListItems) {
-    const properGrammar = (totalListItems) => {
+function TaskListSummary({ totalTasks }) {
+    const properGrammar = (totalTasks) => {
         if(totalListItems === 1)
-            return <p>There is currently {totalListItems} task.</p>;
+            return <p>There is currently {totalTasks} task.</p>;
         else
-            return <p>There are currently {totalListItems} tasks.</p>;
+            return <p>There are currently {totalTasks} tasks.</p>;
     };
 }
 
