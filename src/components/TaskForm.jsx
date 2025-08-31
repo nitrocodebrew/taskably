@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function TaskForm({ taskList, setTaskList }) {
     const [input, setInput] = useState('');
