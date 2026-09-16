@@ -31,7 +31,7 @@ const getTaskInput = () => uiSelectors.taskInput.value.trim();
 
 const getTotalTasks = () => taskList.length;
 
-const validateTask = task => task.length >= 5;
+const validateTask = task => task.trim().length >= 5;
 
 const saveTaskToList = () => {
     taskList.push({
@@ -59,9 +59,14 @@ const deleteTask = id => {
 
 const editTask = id => {
     const taskToEdit = taskList.find(task => task.id === id);
+
+    if(!taskToEdit) {
+        return null;
+    }
+
     const newTaskDescr = prompt('Edit task description:', taskToEdit.descr);
 
-    if(!taskToEdit || newTaskDescr === null) {
+    if(newTaskDescr === null) {
         return;
     }
 
@@ -120,6 +125,7 @@ const renderTaskList = () => {
                     type: 'button',
                     className: 'edit-task-btn',
                     textContent: 'Edit',
+                    'data-id': task.id,
                 }
             );
 
@@ -136,11 +142,9 @@ const renderTaskList = () => {
                     type: 'button',
                     className: 'delete-task-btn',
                     textContent: 'Delete',
+                    'data-id': task.id,
                 }
             );
-            
-            editTaskBtn.addEventListener('click', () => editTask(task.id));
-            deleteTaskBtn.addEventListener('click', () => deleteTask(task.id));
         });
     }
 };
@@ -156,3 +160,14 @@ const createTask = () => {
 };
 
 uiSelectors.createTaskBtn.addEventListener('click', createTask);
+uiSelectors.taskList.addEventListener('click', e => {
+    const editBtn = e.target.closest('.edit-task-btn');
+    const deleteBtn = e.target.closest('.delete-task-btn');
+
+    if(editBtn) {
+        editTask(editBtn.dataset.id);
+    }
+    if(deleteBtn) {
+        deleteTask(deleteBtn.dataset.id);
+    }
+});
