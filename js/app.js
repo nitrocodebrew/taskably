@@ -31,7 +31,7 @@ const getTaskInput = () => uiSelectors.taskInput.value.trim();
 
 const getTotalTasks = () => taskList.length;
 
-const validateTask = () => getTaskInput().length >= 5;
+const validateTask = task => task.length >= 5;
 
 const saveTaskToList = () => {
     taskList.push({
@@ -44,6 +44,36 @@ const saveTaskToList = () => {
 
     clearTaskInput();
     renderTaskList();
+};
+
+const deleteTask = id => {
+    if(confirm('Are you sure you want to delete this task? This action cannot be undone.')) {
+        const index = taskList.findIndex(task => task.id === id);
+
+        if(index !== -1) {
+            taskList.splice(index, 1);
+            renderTaskList();
+        }
+    }
+};
+
+const editTask = id => {
+    const taskToEdit = taskList.find(task => task.id === id);
+    const newTaskDescr = prompt('Edit task description:', taskToEdit.descr);
+
+    if(!taskToEdit || newTaskDescr === null) {
+        return;
+    }
+
+    const newTask = newTaskDescr.trim();
+    if(validateTask(newTask)) {
+        taskToEdit.descr = newTask;
+        renderTaskList();
+    }
+    else {
+        alert('The task description should contain at least 5 characters; try again.');
+        return;        
+    }
 };
 
 const clearTaskList = () => uiSelectors.taskList.innerHTML = '';
@@ -108,13 +138,15 @@ const renderTaskList = () => {
                     textContent: 'Delete',
                 }
             );
-
+            
+            editTaskBtn.addEventListener('click', () => editTask(task.id));
+            deleteTaskBtn.addEventListener('click', () => deleteTask(task.id));
         });
     }
 };
 
 const createTask = () => {
-    if(validateTask()) {
+    if(validateTask(getTaskInput())) {
         saveTaskToList();
     }
     else {
