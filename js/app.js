@@ -81,6 +81,14 @@ const editTask = id => {
     }
 };
 
+const toggleTaskCompleted = id => {
+    const task = taskList.find(taskItem => taskItem.id === id);
+    if(task) {
+        task.completed = !task.completed;
+        renderTaskList();
+    }
+};
+
 const clearTaskList = () => uiSelectors.taskList.innerHTML = '';
 
 const clearTaskInput = () => {
@@ -95,7 +103,27 @@ const renderTaskList = () => {
         uiSelectors.emptyListLabel.style.display = 'none';
         
         taskList.forEach(task => {
-            const taskListItem = createHtmlElement('li', uiSelectors.taskList);
+            // Apply a 'completed' class to the <li> wrapper if task.completed is true
+            const taskListItem = createHtmlElement('li', uiSelectors.taskList, {
+                className: task.completed ? 'completed' : '',
+            });
+
+            const completedToggler = createHtmlElement(
+                'input',
+                createHtmlElement(
+                    'div',
+                    taskListItem,
+                    {
+                        className: 'toggle-complete',
+                    }
+                ),
+                {
+                    type: 'checkbox',
+                    className: 'task-completed',
+                    checked: task.completed,
+                    'data-id': task.id,
+                }
+            );
 
             const taskDescr = createHtmlElement(
                 'span',
@@ -146,6 +174,8 @@ const renderTaskList = () => {
                 }
             );
         });
+    } else {
+        uiSelectors.emptyListLabel.style.display = 'block';
     }
 };
 
@@ -161,9 +191,14 @@ const createTask = () => {
 
 uiSelectors.createTaskBtn.addEventListener('click', createTask);
 uiSelectors.taskList.addEventListener('click', e => {
+    const completedCheckbox = e.target.closest('.task-completed');
     const editBtn = e.target.closest('.edit-task-btn');
     const deleteBtn = e.target.closest('.delete-task-btn');
 
+    if(completedCheckbox) {
+        toggleTaskCompleted(completedCheckbox.dataset.id);
+    }
+    
     if(editBtn) {
         editTask(editBtn.dataset.id);
     }
