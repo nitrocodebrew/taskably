@@ -89,6 +89,14 @@ const toggleTaskCompleted = id => {
     }
 };
 
+const toggleTaskUrgency = id => {
+    const task = taskList.find(taskItem => taskItem.id === id);
+    if(task) {
+        task.urgent = !task.urgent;
+        renderTaskList();
+    }
+}
+
 const clearTaskList = () => uiSelectors.taskList.innerHTML = '';
 
 const clearTaskInput = () => {
@@ -125,7 +133,25 @@ const renderTaskList = () => {
                 }
             );
 
-            const taskDescr = createHtmlElement(
+            
+            const urgencyToggler = createHtmlElement(
+                'button',
+                createHtmlElement(
+                    'div',
+                    taskListItem,
+                    {
+                        className: 'toggle-urgent',
+                    }
+                ),
+                {
+                    type: 'button',
+                    className: 'task-urgent',
+                    innerHTML: task.urgent ? '&starf;' : '&star;',
+                    'data-id': task.id,
+                }
+            );
+
+            createHtmlElement(
                 'span',
                 createHtmlElement(
                     'div',
@@ -192,11 +218,16 @@ const createTask = () => {
 uiSelectors.createTaskBtn.addEventListener('click', createTask);
 uiSelectors.taskList.addEventListener('click', e => {
     const completedCheckbox = e.target.closest('.task-completed');
+    const urgencyToggle = e.target.closest('.task-urgent');
     const editBtn = e.target.closest('.edit-task-btn');
     const deleteBtn = e.target.closest('.delete-task-btn');
 
     if(completedCheckbox) {
         toggleTaskCompleted(completedCheckbox.dataset.id);
+    }
+
+    if(urgencyToggle) {
+        toggleTaskUrgency(urgencyToggle.dataset.id);
     }
     
     if(editBtn) {
