@@ -95,7 +95,15 @@ const toggleTaskUrgency = id => {
         task.urgent = !task.urgent;
         renderTaskList();
     }
-}
+};
+
+const formatTaskDate = timestamp => {
+    return new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+    }).format(timestamp);
+};
 
 const clearTaskList = () => uiSelectors.taskList.innerHTML = '';
 
@@ -163,6 +171,20 @@ const renderTaskList = () => {
                 {
                     className: 'task-descr-label',
                     textContent: task.descr,
+                }
+            );
+
+            createHtmlElement(
+                'time',
+                createHtmlElement(
+                    'div',
+                    taskListItem,
+                    {
+                        className: 'task-timestamp',
+                    }
+                ),
+                {
+                    textContent: formatTaskDate(task.timestamp),
                 }
             );
 
