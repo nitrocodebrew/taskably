@@ -132,7 +132,7 @@ const renderTaskList = () => {
                 className: task.completed ? 'completed' : '',
             });
 
-            const completedToggler = createHtmlElement(
+            createHtmlElement(
                 'input',
                 createHtmlElement(
                     'div',
@@ -150,7 +150,7 @@ const renderTaskList = () => {
             );
 
             
-            const urgencyToggler = createHtmlElement(
+            createHtmlElement(
                 'button',
                 createHtmlElement(
                     'div',
@@ -196,7 +196,7 @@ const renderTaskList = () => {
                 }
             );
 
-            const editTaskBtn = createHtmlElement(
+            createHtmlElement(
                 'button',
                 createHtmlElement(
                     'div',
@@ -213,7 +213,7 @@ const renderTaskList = () => {
                 }
             );
 
-            const deleteTaskBtn = createHtmlElement(
+            createHtmlElement(
                 'button',
                 createHtmlElement(
                     'div',
@@ -264,6 +264,6 @@ uiSelectors.taskList.addEventListener('click', e => {
         editTask(editBtn.dataset.id);
     }
     if(deleteBtn) {
-        confirmDeleteTask();
+        deleteTask(deleteBtn.dataset.id);
     }
 });
