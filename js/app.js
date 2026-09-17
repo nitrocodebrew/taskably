@@ -57,6 +57,7 @@ const deleteTask = id => {
     }
 };
 
+
 const editTask = id => {
     const taskToEdit = taskList.find(task => task.id === id);
 
@@ -98,11 +99,18 @@ const toggleTaskUrgency = id => {
 };
 
 const formatTaskDate = timestamp => {
-    return new Intl.DateTimeFormat('en-US', {
+    const formattedDate = new Intl.DateTimeFormat('en-US', {
         month: 'long',
         day: 'numeric',
         year: 'numeric',
     }).format(timestamp);
+
+    const formattedTime = new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+    }).format(timestamp).replace(' ', '');
+
+    return `${formattedDate} at ${formattedTime}`;
 };
 
 const clearTaskList = () => uiSelectors.taskList.innerHTML = '';
@@ -256,6 +264,6 @@ uiSelectors.taskList.addEventListener('click', e => {
         editTask(editBtn.dataset.id);
     }
     if(deleteBtn) {
-        deleteTask(deleteBtn.dataset.id);
+        confirmDeleteTask();
     }
 });
